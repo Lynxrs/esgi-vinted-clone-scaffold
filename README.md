@@ -14,7 +14,7 @@ Pour les instructions complètes du projet (fonctionnalités, barème, API, sout
 ```bash
 git clone <url-du-repo>
 cd vinted-clone
-cp .env.example .env     # Éditer .env avec votre nom
+cp .env .env     # Éditer .env avec votre nom
 pnpm install
 ```
 

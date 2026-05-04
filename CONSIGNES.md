@@ -57,7 +57,7 @@ pnpm install          # Installe aussi les dépendances du serveur (postinstall)
 Copiez le fichier `.env.example` en `.env` et personnalisez votre nom :
 
 ```bash
-cp .env.example .env
+cp .env .env
 ```
 
 ```env
