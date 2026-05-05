@@ -3,24 +3,23 @@ import type { Article } from "../types/article.ts";
 import { api } from "../services/api.ts";
 import { useCurrentUserId } from "../hooks/useCurrentUserId.ts";
 import { Link } from "react-router-dom";
+import ArticleCard from "../components/ArticleCard.tsx";
 
 export default function MyArticlesPage() {
   const [ articles, setArticles ] = useState<Article[]>([]);
   const [ error, setError ] = useState<string | null>(null);
   const [ loading, setLoading ] = useState<boolean>(true);
   const userid = useCurrentUserId();
+
   async function fetchArticles() {
-    let response;
     try{
-      response = await api.get<Article[]>(`/api/users/${userid}/articles`);
+      const response = await api.get<Article[]>(`/api/users/${userid}/articles`);
       setArticles(response);
       setLoading(false);
     } catch (error) {
       setError(error instanceof Error ? error.message : "Une erreur est survenue Veuillez actualiser la page")
       setLoading(false);
     }
-    console.log(response);
-
   }
 
   async function handleDelete(id: string) {
@@ -46,23 +45,11 @@ export default function MyArticlesPage() {
         </p>
       )}
 
-      <ul className="space-y-4">
-        { !error &&!loading && articles.map((article) => (
-          <li
-            key={article.id}
-            className="border rounded p-4 flex justify-between items-center"
-          >
-            <div>
-              <h2 className="font-semibold">{article.title}</h2>
-              <p className="text-sm text-gray-500">{article.price} €</p>
-            </div>
-            <div className="flex gap-3">
-              <Link
-                to={`/articles/${article.id}`}
-                className="text-teal-600 hover:underline text-sm"
-              >
-                Voir
-              </Link>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        { !error && !loading && articles.map((article) => (
+          <div key={article.id} className="flex flex-col">
+            <ArticleCard article={article} />
+            <div className="flex gap-3 mt-2 justify-end">
               <Link
                 to={`/articles/${article.id}/edit`}
                 className="text-gray-600 hover:underline text-sm"
@@ -76,9 +63,9 @@ export default function MyArticlesPage() {
                 Supprimer
               </button>
             </div>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
