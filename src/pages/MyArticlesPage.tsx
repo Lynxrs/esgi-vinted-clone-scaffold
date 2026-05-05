@@ -52,14 +52,12 @@ export default function MyArticlesPage() {
             <div className="flex gap-3 mt-2 justify-end">
               <Link
                 to={`/articles/${article.id}/edit`}
-                className="text-gray-600 hover:underline text-sm"
-              >
+                className="text-gray-600 hover:underline text-sm">
                 Modifier
               </Link>
               <button
                 onClick={() => handleDelete(article.id)}
-                className="text-red-500 hover:underline text-sm"
-              >
+                className="text-red-500 hover:underline text-sm">
                 Supprimer
               </button>
             </div>

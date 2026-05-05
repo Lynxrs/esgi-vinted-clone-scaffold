@@ -4,6 +4,7 @@ import type { Article } from "../types/article";
 import { CATEGORIES, CONDITIONS } from "../types/article";
 import { api } from "../services/api.ts";
 import ArticleCard from "../components/ArticleCard.tsx";
+import { favouriteService } from "../services/favouriteService.ts";
 
 type Filters = {
   search: string;
@@ -43,6 +44,13 @@ export default function CataloguePage() {
   } = useQuery<Article[]>({
     queryKey: ["articles", filters],
     queryFn: () => api.get<Article[]>(buildUrl(filters)),
+  });
+
+  const {
+    data: favorites = [],
+  } = useQuery<Article[]>({
+    queryKey: ["favorites"],
+    queryFn: () => favouriteService.getFavorites(),
   });
 
   function handleChange(
@@ -117,7 +125,9 @@ export default function CataloguePage() {
       </div>
 
       {isLoading && (
-        <p className="text-center text-gray-500 py-12">Chargement en cours...</p>
+        <p className="text-center text-gray-500 py-12">
+          Chargement en cours...
+        </p>
       )}
 
       {error && (
@@ -135,7 +145,11 @@ export default function CataloguePage() {
       {!isLoading && !error && articles && articles.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
+            <ArticleCard
+              key={article.id}
+              article={article}
+              isFavorite={favorites.some((f) => f.id === article.id)}
+            />
           ))}
         </div>
       )}
