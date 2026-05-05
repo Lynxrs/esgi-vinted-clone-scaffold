@@ -24,24 +24,18 @@ export default function EditArticlePage() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (_data: ArticleFormData): Promise<Article> => {
-      const temp = {
-        ..._data,
-      };
-      api.put(`/articles/${id}`, temp);
-      return { createdAt: "", id: "", userId: "", userName: "", ...temp};
-    },
+    mutationFn: (_data: ArticleFormData): Promise<Article> =>
+      api.put<Article>(`/api/articles/${id}`, { ..._data }),
 
     onSuccess: () => {
-      void queryClient;
-      void navigate;
+      void queryClient.invalidateQueries({ queryKey: ["article", id] });
+      navigate(`/articles/${id}`);
     },
   });
 
   if (isLoading) return <p>Chargement...</p>;
   if (error) return <p className="text-red-600">Erreur : {error.message}</p>;
   if (!article) return <p>Article introuvable.</p>;
-
   if (article.userId !== userId) {
     return (
       <p className="text-red-600">Vous ne pouvez pas modifier cette annonce.</p>
