@@ -12,21 +12,27 @@ export default function MyArticlesPage() {
   const userid = useCurrentUserId();
 
   async function fetchArticles() {
-    try{
-      const response = await api.get<Article[]>(`/api/users/${userid}/articles`);
+    try {
+      const response = await api.get<Article[]>(
+        `/api/users/${userid}/articles`,
+      );
       setArticles(response);
       setLoading(false);
     } catch (error) {
-      setError(error instanceof Error ? error.message : "Une erreur est survenue Veuillez actualiser la page")
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Une erreur est survenue Veuillez actualiser la page",
+      );
       setLoading(false);
     }
   }
 
   async function handleDelete(id: string) {
-    api.delete(`/api/articles/${id}`);
+    if (!window.confirm("Voulez-vous vraiment supprimer cet article ?")) return;
+    await api.delete(`/api/articles/${id}`);
     setArticles(articles.filter((article) => article.id !== id));
   }
-
   useEffect(() => {
     fetchArticles();
   },[])
